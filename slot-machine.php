@@ -62,55 +62,9 @@ function displayMenu(): void
     echo "4. Cash out." . PHP_EOL;
 }
 
-function checkWin(array $board, float $bet)
+function checkWin()
 {
-    $win = 0;
-if ($board[0] === $board[1] && $board[0] === $board[2]) {
-    $win += $bet * 0.5;
-}
-    if ($board[0] === $board[1] && $board[0] === $board[2] && $board[0] === $board[3]) {
-        $win += $bet * 2;
-    }
-    if ($board[0] === $board[1] && $board[0] === $board[2] && $board[0] === $board[3] && $board[0] === $board[4]) {
-        $win += $bet * 10;
-    }
-    if ($board[5] === $board[6] && $board[5] === $board[7]) {
-        $win += $bet * 0.5;
-    }
-    if ($board[5] === $board[6] && $board[5] === $board[7] && $board[5] === $board[8]) {
-        $win += $bet * 2;
-    }
-    if ($board[5] === $board[6] && $board[5] === $board[7] && $board[5] === $board[8] && $board[5] === $board[9]) {
-        $win += $bet * 10;
-    }
-    if ($board[10] === $board[11] && $board[10] === $board[12]) {
-        $win += $bet * 0.5;
-    }
-    if ($board[10] === $board[11] && $board[10] === $board[12] && $board[10] === $board[13]) {
-        $win += $bet * 2;
-    }
-    if ($board[10] === $board[11] && $board[10] === $board[12] && $board[10] === $board[13] && $board[10] === $board[14]) {
-        $win += $bet * 10;
-    }
-    if ($board[0] === $board[6] && $board[0] === $board[12]) {
-        $win += $bet * 0.5;
-    }
-    if ($board[0] === $board[6] && $board[0] === $board[12] && $board[0] === $board[8]) {
-        $win += $bet * 2;
-    }
-    if ($board[0] === $board[6] && $board[0] === $board[12] && $board[0] === $board[8] && $board[0] === $board[4]) {
-        $win += $bet * 10;
-    }
-    if ($board[10] === $board[6] && $board[10] === $board[2]) {
-        $win += $bet * 0.5;
-    }
-    if ($board[10] === $board[6] && $board[10] === $board[2] && $board[10] === $board[8]) {
-        $win += $bet * 2;
-    }
-    if ($board[10] === $board[6] && $board[10] === $board[2] && $board[10] === $board[8] && $board[10] === $board[14]) {
-        $win += $bet * 10;
-    }
-    return $win;
+
 }
 
 
@@ -155,6 +109,4 @@ while ($selection != 4) {
             break;
     }
 
-    $win = checkWin($board, $bet);
-    $balance += $win;
 }
