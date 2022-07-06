@@ -28,22 +28,32 @@ $payLines = [
     4 => [0, 6, 12, 8, 4],
     5 => [10, 6, 2, 8, 14]
 ];
+$symbols = ['| 9 |', '| 9 |', '| 9 |', '| 9 |', '| 9 |', '| 9 |', '| 9 |', '| 9 |', '| 9 |', '| 9 |',
+    '| J |', '| J |', '| J |', '| J |', '| J |', '| J |', '| J |', '| J |', '| J |', '| J |',
+    '| Q |', '| Q |', '| Q |', '| Q |', '| Q |', '| Q |', '| Q |', '| Q |', '| Q |', '| Q |',
+    '| K |', '| K |', '| K |', '| K |', '| K |', '| K |', '| K |', '| K |',
+    '| A |', '| A |', '| A |', '| A |', '| A |', '| A |', '| A |', '| A |',
+    '| # |', '| # |', '| # |', '| # |', '| # |', '| # |',
+    '| $ |', '| $ |', '| $ |', '| $ |', '| $ |', '| $ |',
+    '| 7 |', '| 7 |', '| 7 |', '| 7 |'
+];
 $board = [];
-$symbols = [9 => 10, 'J' => 10, 'Q' => 10, 'K' => 7, 'A' => 7, '#' => 5, '$' => 5, 7 => 3];
-$symbolPay = [9 => 0.5, 'J' => 0.5, 'Q' => 0.5, 'K' => 1, 'A' => 1, '#' => 2, '$' => 2, 7 => 5];
+//For three in a row
+$symbolPay = ['| 9 |' => 1, '| J |' => 1, '| Q |' => 1,
+    '| K |' => 2, '| A |' => 2, '| # |' => 4, '| $ |' => 4, '| 7 |' => 10];
 
-function displayBoard(array $board, array $symbol): array
+function displayBoard(array $symbol): array
 {
     echo 'Good luck!';
-    $board = array_fill(0, 15, 0);
+    $board = array_fill(0, 14, 0);
     for ($i = 0; $i < 15; $i++) {
         echo ($i % 5 == 0) ? PHP_EOL : '';
-        echo $board[$i] = '| ' . array_rand($symbol) . ' |';
+        echo $board[$i] = array_rand(array_flip(($symbol)));
     }
     return $board;
 }
 
-function welcomeBoard(array $board): void
+function welcomeBoard(): void
 {
     echo "         Welcome!";
     for ($i = 0; $i < 3; $i++) {
@@ -62,13 +72,44 @@ function displayMenu(): void
     echo "4. Cash out." . PHP_EOL;
 }
 
-function checkWin()
+function countWin(array $board, array $payLines, array $symbolPay, float $bet, int $balance): int
 {
+    $win = 0;
+    for ($i = 1; $i <= count($payLines); $i++) {
+        if ($board[$payLines[$i][0]] == $board[$payLines[$i][1]] && $board[$payLines[$i][1]] == $board[$payLines[$i][2]]
+            && $board[$payLines[$i][2]] == $board[$payLines[$i][3]] && $board[$payLines[$i][3]] == $board[$payLines[$i][4]]) {
+            foreach ($symbolPay as $symbol => $pay) {
+                if (strcmp($symbol, $board[$payLines[$i][0]]) == 0) {
+                    $win = $bet * $pay * 5 * 100;
+                    $balance += $win;
+                    echo "Nice! You win " . $win . " credits! Five $symbol in a row!" . PHP_EOL;
+                }
+            }
+        } elseif ($board[$payLines[$i][0]] == $board[$payLines[$i][1]] && $board[$payLines[$i][1]] == $board[$payLines[$i][2]]
+            && $board[$payLines[$i][2]] == $board[$payLines[$i][3]]) {
+            foreach ($symbolPay as $symbol => $pay) {
+                if (strcmp($symbol, $board[$payLines[$i][0]]) == 0) {
+                    $win = $bet * $pay * 4 * 100;
+                    $balance += $win;
+                    echo "Nice! You win " . $win . " credits! Four $symbol in a row!" . PHP_EOL;
+                }
 
+            }
+        } elseif ($board[$payLines[$i][0]] == $board[$payLines[$i][1]] && $board[$payLines[$i][1]] == $board[$payLines[$i][2]]) {
+            foreach ($symbolPay as $symbol => $pay) {
+                if (strcmp($symbol, $board[$payLines[$i][0]]) == 0) {
+                    $win = $bet * $pay * 100;
+                    $balance += $win;
+                    echo "Nice! You win " . $win . " credits! Three $symbol in a row!" . PHP_EOL;
+                }
+            }
+        }
+    }
+    return $balance;
 }
 
 
-echo welcomeBoard($board) . PHP_EOL;
+echo welcomeBoard() . PHP_EOL;
 echo PHP_EOL;
 
 while ($selection != 4) {
@@ -81,10 +122,13 @@ while ($selection != 4) {
 
     switch ($selection) {
         case 1:
+            system('clear');
             if ($balance < $bet) {
                 echo 'Your balance is too low!' . PHP_EOL;
             } else {
-                $board = displayBoard($board, $symbols);
+                $board = displayBoard($symbols);
+                echo PHP_EOL;
+                $balance = countWin($board, $payLines, $symbolPay, $bet, $balance);
                 $balance -= $bet * 100;
             }
             break;
@@ -108,5 +152,6 @@ while ($selection != 4) {
             echo "Please choose valid case";
             break;
     }
+
 
 }
